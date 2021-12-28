@@ -655,3 +655,158 @@ void drawSceneTanah(Terrain *terrain, GLfloat r, GLfloat g, GLfloat b) {
 	}
 }
 unsigned int LoadTextureFromBmpFile(char *filename);
+//Function Membuat Bentuk Menara Bigben
+void menara()
+{
+    //kotak yang tinggi
+    glPushMatrix();
+    glTranslatef(50.0, 75.0, 35.5); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glColor3f(1,0.49,0);
+    glScalef(40.0, 155.0, 40.0);
+    glutSolidCube(1.0f); //kubus solid
+    glPopMatrix();
+
+    //kotak didekat jam
+    glPushMatrix();
+    glTranslatef(50.0, 125.0, 36.5); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glColor3f(1, 0.49, 0);
+    glScalef(43.0, 38.0, 48.0);
+    glutSolidCube(1.0f); //kubus solid
+    glPopMatrix();
+
+    //limas runcing
+    glPushMatrix();
+    glTranslatef(50.0,200.5, 35.5); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glRotatef(45.0,0.0,1.0,0.0);
+    glRotatef(-90.0,1.0,0.0,0.0);
+    glColor3f(1,0.49,0);
+    glutSolidCone(1.5, 31.86,4,2); //kerucut
+    glPopMatrix();
+
+    //limas besar
+    glPushMatrix();
+    glTranslatef(50.0, 152.65, 35.5); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glRotatef(45.0,0.0,1.0,0.0);
+    glRotatef(-90.0,1.0,0.0,0.0);
+    glColor3f(1,0.49,0);
+    glutSolidCone(28.5, 50.8, 4, 2); //kerucut
+    glPopMatrix();
+
+    // garis hiasan di menara (bawah)
+    for(int n=0;n<2;n++)
+    {
+        for(int t=0;t<8;t++)
+        {
+            glPushMatrix();
+            glTranslatef(33+(t*5), 80.5-(n*45),55); // We move the object forward (the model matrix is multiplied by the translation matrix)
+            glScalef(1.0, 20.0, 1.0);
+            glColor3f(0.1f, 0.1f, 0.1f);
+            glutSolidCube(2); //kerucut
+            glPopMatrix();
+        }
+    }
+    // garis hiasan di menara (tengah)
+    for(int t=0;t<7;t++)
+    {
+        glPushMatrix();
+        glTranslatef(34+(t*5), 148.5, 57); // We move the object forward (the model matrix is multiplied by the translation matrix)
+        glScalef(1.0, 2.0, 1.0);
+        glColor3f(0.0f, 0.1f, 0.1f);
+        glutSolidCube(2); //kerucut
+        glPopMatrix();
+    }
+    // garis hiasan di menara (atas)
+    for(int t=0;t<7;t++)
+    {
+        glPushMatrix();
+        glTranslatef(39+(t*3.5), 173.5, 52); // We move the object forward (the model matrix is multiplied by the translation matrix)
+        glScalef(1.0, 5.0, 1.0);
+        glColor3f(0.0f, 0.0f, 0.0f);
+        glutSolidCube(2); //kerucut
+        glPopMatrix();
+    }
+
+    for(int n=0;n<2;n++)
+    {
+        for(int t=0;t<8;t++)
+        {
+            glPushMatrix();
+            glTranslatef(33+(t*5), 80.5-(n*45),16); // We move the object forward (the model matrix is multiplied by the translation matrix)
+            glScalef(1.0, 20.0, 1.0);
+            glColor3f(0.4f, 0.1f, 0.1f);
+            glutSolidCube(2); //kerucut
+            glPopMatrix();
+        }
+    }
+
+    //sekat gedung tengah
+    glPushMatrix();
+    glTranslatef(50,58,55); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glScalef(20.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.1f);
+    glutSolidCube(2); //kerucut
+    glPopMatrix();
+
+    //sekat gedung bawah
+    glPushMatrix();
+    glTranslatef(50,12,55); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glScalef(20.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.1f);
+    glutSolidCube(2); //kerucut
+    glPopMatrix();
+    //sekat gedung bawah
+    glPushMatrix();
+    glTranslatef(50,7,55); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glScalef(20.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.1f);
+    glutSolidCube(2); //kerucut
+    glPopMatrix();
+    //sekat gedung bawah
+    glPushMatrix();
+    glTranslatef(50,2,55); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glScalef(20.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.1f);
+    glutSolidCube(2); //kerucut
+    glPopMatrix();
+    //sekat gedung atas
+    glPushMatrix();
+    glTranslatef(50,103,55); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glScalef(20.0, 1.0, 1.0);
+    glColor3f(0.1f, 0.1f, 0.1f);
+    glutSolidCube(2); //kerucut
+    glPopMatrix();
+
+    //bentuk jendela
+    for(int z=0; z<3;z++)
+    {
+        int y=0;
+        for(int o=0; o<2;o++)
+        {
+            glPushMatrix();
+            glTranslatef(40+(z*10), 160.5-(o*6),47+y); // We move the object forward (the model matrix is multiplied by the translation matrix)
+            glRotatef(45.0,0.0,1.0,0.0);
+            glRotatef(-90.0,1.0,0.0,0.0);
+            glColor3f(0.9f, 0.9f, 0.9f);
+            glutSolidTorus(3,4,5,100); //kerucut
+            glPopMatrix();
+            y=y+2;
+        }
+    }
+
+    //kotak dekat jam bagian 2
+    glPushMatrix();
+    glTranslatef(50.0, 170.0, 35.5); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glColor3f(1,0.49,0);
+    glScalef(30.0, 30.0, 30.0);
+    glutSolidCube(1.0f); //kubus solid
+    glPopMatrix();
+
+    //limas besar
+    glPushMatrix();
+    glTranslatef(50.0, 185.0, 35.5); // We move the object forward (the model matrix is multiplied by the translation matrix)
+    glRotatef(45.0,0.0,1.0,0.0);
+    glRotatef(-90.0,1.0,0.0,0.0);
+    glColor3f(1,0.49,0);
+    glutSolidCone(20.5, 27.86, 4, 2); //kerucut
+    glPopMatrix();
+}
