@@ -501,3 +501,157 @@ public:
 	}
 };
 //end class
+//Inisialiasi pergerakan jam
+float pindahx =0.0, pindahy=0.0, pindahz=0.0;
+float xpos = 0, ypos = 1.2, zpos = -2.0, xrot = 7, yrot = 0, putary=0; //Rotasi Sudut
+float inner, outer; int garisv,garish; //Variabel Torus
+
+const float clockR    = 0.5f,
+            clockVol  = 1.0f,
+
+            angle1min = M_PI / 30.0f,
+
+            minStart  = 0.9f,
+            minEnd    = 1.0f,
+
+            stepStart = 0.8f,
+            stepEnd   = 1.0f;
+
+float angleHour = 0,
+      angleMin  = 0,
+      angleSec  = 0;
+
+void newLine(float rStart, float rEnd, float angle){
+  float c = cos(angle), s = sin(angle);
+  glVertex2f( clockR*rStart*c, clockR*rStart*s);
+  glVertex2f( clockR*rEnd*c, clockR*rEnd*s);
+}
+
+//Function Membuat Bentuk Jarum Jam
+void jam (void)
+{
+  glColor3f(0.0f, 0.0f, 0.0f);
+  glLineWidth(1.0f);
+  glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_POINT_SMOOTH);
+  glEnable(GL_POLYGON_SMOOTH);
+
+  glBegin(GL_LINES);
+    for(int i=0; i<60; i++){
+      if(i%5){ // normal minute
+        if(i%5 == 1)
+          glColor3f(0.1f, 0.1f, 0.2f);
+        newLine(minStart, minEnd, i*angle1min);
+      }else{
+        glColor3f(1.0f, 0.0f, 0.0f);
+        newLine(stepStart, stepEnd, i*angle1min);
+      }
+    }
+  glEnd();
+
+  glLineWidth(3.0f);
+  glBegin(GL_LINES);
+    newLine(0.0f, 0.5f, -angleHour+M_PI/2);
+    newLine(0.0f, 0.8f, -angleMin+M_PI/2);
+  glEnd();
+
+  glLineWidth(1.0f);
+  glColor3f(0.9f, 0.0f, 1.0f);
+  glBegin(GL_LINES);
+    newLine(0.0f, 0.8f, -angleSec+M_PI/2);
+  glEnd();
+}
+
+
+//Functin Mengelola Waktu
+void TimerFunction(int value){
+  struct timeb tb;
+  time_t tim=time(0);
+  struct tm* t;
+  t=localtime(&tim);
+  ftime(&tb);
+
+  angleSec = (float)(t->tm_sec+ (float)tb.millitm/1000.0f)/30.0f * M_PI;
+  angleMin = (float)(t->tm_min)/30.0f * M_PI + angleSec/60.0f;
+  angleHour = (float)(t->tm_hour > 12 ? t->tm_hour-12 : t->tm_hour)/6.0f * M_PI+
+              angleMin/12.0f;
+
+  // called if timer event
+  // ...advance the state of animation incrementally...
+  //rot+=1;
+  glutPostRedisplay(); // request redisplay
+  glutTimerFunc(33,TimerFunction, 1); // request next timer event
+}
+//Akhir function mengelola waktu
+
+
+//Loads a terrain from a heightmap.  The heights of the terrain range from
+//-height / 2 to height / 2.
+//load terain di procedure inisialisasi
+Terrain* loadTerrain(const char* filename, float height) {
+	Image* image = loadBMP(filename);
+	Terrain* t = new Terrain(image->width, image->height);
+	for (int y = 0; y < image->height; y++) {
+		for (int x = 0; x < image->width; x++) {
+			unsigned char color = (unsigned char) image->pixels[3 * (y
+					* image->width + x)];
+			float h = height * ((color / 255.0f) - 0.5f);
+			t->setHeight(x, y, h);
+		}
+	}
+
+	delete image;
+	t->computeNormals();
+	return t;
+}
+
+
+//Membuat tipe data terrain
+Terrain* _terrain;
+Terrain* _terrainTanah;
+Terrain* _terrainAir;
+
+const GLfloat light_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+const GLfloat light_diffuse[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat light_position[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+const GLfloat light_ambient2[] = { 0.3f, 0.3f, 0.3f, 0.0f };
+const GLfloat light_diffuse2[] = { 0.3f, 0.3f, 0.3f, 0.0f };
+
+const GLfloat mat_ambient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+const GLfloat mat_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+const GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat high_shininess[] = { 100.0f };
+
+void cleanup() {
+	delete _terrain;
+	delete _terrainTanah;
+}
+
+
+//Function untuk di display
+void drawSceneTanah(Terrain *terrain, GLfloat r, GLfloat g, GLfloat b) {
+
+	float scale = 350.0f / max(terrain->width(), terrain->length());
+	glScalef(scale, scale, scale);
+	glTranslatef(-(float) (terrain->width()) / 2.5, 0.0f,
+			-(float) (terrain->length()) / 2.5);
+
+	glColor3f(r, g, b);
+	for (int z = 0; z < terrain->length() - 1; z++) {
+        // Process Each Triangle
+		//Makes OpenGL draw a triangle at every three consecutive vertices
+		glBegin(GL_TRIANGLE_STRIP);
+		for (int x = 0; x < terrain->width(); x++) {
+			Vec3f normal = terrain->getNormal(x, z);
+			glNormal3f(normal[0], normal[1], normal[2]);
+			glVertex3f(x, terrain->getHeight(x, z), z);
+			normal = terrain->getNormal(x, z + 1);
+			glNormal3f(normal[0], normal[1], normal[2]);
+			glVertex3f(x, terrain->getHeight(x, z + 1), z + 1);
+		}
+		glEnd();
+	}
+}
+unsigned int LoadTextureFromBmpFile(char *filename);
