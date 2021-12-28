@@ -810,3 +810,145 @@ void menara()
     glutSolidCone(20.5, 27.86, 4, 2); //kerucut
     glPopMatrix();
 }
+
+
+//Function Membuat Bentuk Jam
+void bentukJam(){
+     //JAM BIGBEN
+     glPushMatrix();
+     glTranslatef(50.35, 125, 60); // We move the object forward (the model matrix is multiplied by the translation matrix)
+     glColor3f(0.9,0.9,0.9);
+     glScalef(38.78, 38.78, 2);
+     glutSolidSphere(0.5, 20, 20); //bola
+     glPopMatrix();
+
+     //jarum JAM BIGBEN
+     glPushMatrix();
+     glTranslatef(50.35, 125, 61); // We move the object forward (the model matrix is multiplied by the translation matrix)
+     glScalef(30, 30, 30);
+     jam();
+     glPopMatrix();
+}
+
+
+//Function yang digunakan untuk menampilkan setiap objek yang kita buat
+void display(void) {
+	glClearStencil(0); //clear the stencil buffer
+	glClearDepth(1.0f);
+	glClearColor(0.0, 0.6, 0.8, 1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //clear the buffers
+	glLoadIdentity();
+	gluLookAt(viewx-1, viewy, viewz, 0.0, 0.0, 5.0, 0.0, 1.0, 0.0);
+
+	glPushMatrix();
+	//glBindTexture(GL_TEXTURE_3D, texture[0]);
+	drawSceneTanah(_terrain, 0.3f, 0.9f, 0.0f);
+	glPopMatrix();
+
+	glPushMatrix();
+	//glBindTexture(GL_TEXTURE_3D, texture[0]);
+	drawSceneTanah(_terrainTanah, 0.4f, 0.4f, 0.4f);
+	glPopMatrix();
+
+	glPushMatrix();
+	//glBindTexture(GL_TEXTURE_3D, texture[0]);
+	drawSceneTanah(_terrainAir, 0.0f, 0.2f, 0.5f);
+	glPopMatrix();
+
+	bentukJam();
+	menara();
+
+    glPushMatrix();
+    glTranslatef(0.8,-0.8,1.3);
+    glPushMatrix();
+    glTranslatef(pindahx,pindahz,pindahy);
+
+    glPopMatrix();
+    glPopMatrix();
+
+	glutSwapBuffers();
+	glFlush();
+}
+
+
+//Function yang digunakan sebagai tempat menggambar
+void init(void) {
+	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glDepthFunc(GL_LESS); // The Type Of Depth Testing To Do
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_COLOR_MATERIAL);
+	glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
+	glShadeModel(GL_SMOOTH); // Enable Smooth Shading
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glEnable(GL_CULL_FACE);
+
+	_terrain = loadTerrain("assets/heightmap.bmp", 20);
+	_terrainTanah = loadTerrain("assets/heightmapTanah.bmp", 20);
+	_terrainAir = loadTerrain("assets/heightmapAir.bmp", 20);
+
+}
+
+
+//Function Tombol Keyboard
+void keyboard(unsigned char key, int x, int y) {
+	if (key == 'q') {
+		viewz += 10;
+	}
+	if (key == 'e') {
+		viewz-=10;
+	}
+	if (key == 's') {
+		viewy-=10;
+	}
+	if (key == 'w') {
+		viewy+=10;
+	}
+}
+
+
+//Function Reshape
+void reshape(int w, int h) {
+    // Viewport transformation
+	glViewport(0, 0, (GLsizei) w, (GLsizei) h); // Reset The Current Viewport
+	glMatrixMode(GL_PROJECTION); // Select The Projection Matrix
+	// We initialize the projection matrix as identity
+	glLoadIdentity(); // Reset The Modelview Matrix
+	// We define the "viewing volume"
+	gluPerspective(60, (GLfloat) w / (GLfloat) h, 0.1, 1000.0); // Calculate The Aspect Ratio Of The Window
+	glMatrixMode(GL_MODELVIEW); // Select The Modelview Matrix
+}
+
+
+//Function Main
+int main(int argc, char **argv) {
+	// Konfigurasi dan Menampilkan Window
+    glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL | GLUT_DEPTH); //add a stencil buffer to the window
+	glutInitWindowSize(800, 600);
+	glutInitWindowPosition(100, 100);
+	glutCreateWindow("Big Ben");
+
+	// Fungsi untuk melakukan initialisasi
+	init();
+
+    glutTimerFunc(33, TimerFunction, 1);
+
+    // Registrasi Callback Function
+	glutDisplayFunc(display);
+	glutIdleFunc(display);
+	glutReshapeFunc(reshape);
+	glutKeyboardFunc(keyboard);
+
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+	glColorMaterial(GL_FRONT, GL_DIFFUSE);
+
+    // Event Processing Loop
+	glutMainLoop();
+	return 0;
+}
