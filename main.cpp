@@ -41,7 +41,7 @@ Image* loadBMP(const char* filename);
 
 Image::Image(char* ps, int w, int h) : pixels(ps), width(w), height(h) {}
 
-Image::~Image() {
+Image::~Image() { //gambar
 	delete[] pixels;
 }
 
