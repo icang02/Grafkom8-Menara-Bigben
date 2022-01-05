@@ -140,6 +140,8 @@ namespace {
 	};
 }
 
+//Komentar dari abdi
+
 Image* loadBMP(const char* filename) {
 	ifstream input;
 	input.open(filename, ifstream::binary);
