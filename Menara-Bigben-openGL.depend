@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1641344253 source:c:\users\hp\desktop\grafkom8-menara-bigben\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<math.h>
+	<GL/glut.h>
+	<GL/glu.h>
+	<GL/gl.h>
+	<time.h>
+	<sys/timeb.h>
+	<assert.h>
+	<fstream>
+	<iostream>
+

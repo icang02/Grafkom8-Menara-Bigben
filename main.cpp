@@ -562,7 +562,7 @@ void jam (void)
   glEnd();
 }
 
-
+//Agus
 //Functin Mengelola Waktu
 void TimerFunction(int value){
   struct timeb tb;
@@ -835,7 +835,7 @@ void bentukJam(){
 void display(void) {
 	glClearStencil(0); //clear the stencil buffer
 	glClearDepth(1.0f);
-	glClearColor(0.0, 0.6, 0.8, 1);
+	glClearColor(1.0, 0.6, 0.8, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); //clear the buffers
 	glLoadIdentity();
 	gluLookAt(viewx-1, viewy, viewz, 0.0, 0.0, 5.0, 0.0, 1.0, 0.0);
